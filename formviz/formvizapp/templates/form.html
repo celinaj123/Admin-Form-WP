@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard Registration</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        align-item: center;
+        max-width: 500px;
+        margin: auto;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 8px;
+      }
+      input {
+        width: 95%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      iframe {
+        display: block;
+        width: 100%;
+        height: 400px;
+        margin-top: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 18px;
+        text-align: left;
+    }
+    th, td {
+        padding: 12px;
+        border: 1px solid #ddd;
+    }
+    th {
+        background-color: #f4f4f4;
+    }
+    form {
+        margin-bottom: 20px;
+    }
+    </style>
+  </head>
+    <h1>Register map_rowsec</h1>
+    <form method="POST" action="{% url 'submit' %}">
+        {% csrf_token %}
+        <label for="usr_access">User Access:</label>
+        <input type="text" id="usr_access" name="usr_access" required>
+        
+        <label for="param">Param:</label>
+        <input type="text" id="param" name="param" required>
+        
+        <label for="paramvalue">Param Value:</label>
+        <input type="text" id="paramvalue" name="paramvalue" required>
+        
+        <label for="dashboard_id">Dashboard ID:</label>
+        <input type="text" id="dashboard_id" name="dashboard_id" required>
+        
+        <button type="submit">Add</button>
+    </form>
+    
+
+    <table>
+      <thead>
+          <tr>
+              <th>id</th>
+              <th>usr_access</th>
+              <th>param</th>
+              <th>paramvalue</th>
+              <th>dashboard_id</th>
+              <th>Action</th>
+          </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+            <td>{{ row.id }}</td>
+            <td>{{ row.usr_access }}</td>
+            <td>{{ row.param }}</td>
+            <td>{{ row.paramvalue }}</td>
+            <td>{{ row.dashboard_id }}</td>
+            <td>
+            <form action="{% url 'delete_map_rowsec' row.id %}" method="POST" style="display:inline; border:none;">
+                {% csrf_token %}
+                <button type="submit">Delete</button>
+            </form>
+                <button onclick="toggleform('{{ row.id }}')">Update</button>
+                
+            </td>
+        </tr>
+        <tr id="update-form-{{ row.id }}" style="display: none;">
+            <td colspan="10" style="border:none;">
+                <form action="{% url 'update_map_rowsec' row.id %}" method="POST" style="border: none;">
+                    {% csrf_token %}
+                    <label>User Access:</label>
+                    <input type="text" name="usr_access" value="{{ row.usr_access }}">
+                    <label>Param:</label>
+                    <input type="text" name="param" value="{{ row.param }}">
+                    <label>Param Value:</label>
+                    <input type="text" name="paramvalue" value="{{ row.paramvalue }}">
+                    <label>Dashboard ID:</label>
+                    <input type="text" name="dashboard_id" value="{{ row.dashboard_id }}">
+                    <button type="submit">Save</button>
+            
+                </form>
+            </td>
+        </tr>
+        {% endfor %} 
+      </tbody>
+  </table>
+
+  <script>
+    function toggleform(id) {
+        const formRow = document.getElementById(`update-form-${id}`);
+        if (formRow.style.display === 'none' || formRow.style.display === '') {
+            formRow.style.display = 'table-row';
+        } else {
+            formRow.style.display = 'none';
+        }
+    }
+</script>
+
+  </body>
+</html>
